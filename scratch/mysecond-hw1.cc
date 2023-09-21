@@ -31,7 +31,7 @@
 
 using namespace ns3;
 
-NS_LOG_COMPONENT_DEFINE("SecondScriptExample");
+//NS_LOG_COMPONENT_DEFINE("SecondScriptExample");
 
 int
 main(int argc, char* argv[])
@@ -87,6 +87,7 @@ main(int argc, char* argv[])
     Ipv4InterfaceContainer csmaInterfaces;
     csmaInterfaces = address.Assign(csmaDevices);
 
+
     UdpEchoServerHelper echoServer(9);
 
     ApplicationContainer serverApps = echoServer.Install(csmaNodes.Get(nCsma));
@@ -102,10 +103,30 @@ main(int argc, char* argv[])
     clientApps.Start(Seconds(2.0));
     clientApps.Stop(Seconds(10.0));
 
+
+    UdpEchoServerHelper echoServerNew(10);
+    ApplicationContainer serverAppsNew = echoServerNew.Install(csmaNodes.Get(nCsma));
+    serverAppsNew.Start(Seconds(1.0));
+    serverAppsNew.Stop(Seconds(10.0));
+
+    UdpEchoClientHelper echoClientNew(csmaInterfaces.GetAddress(nCsma), 10);
+    echoClientNew.SetAttribute("MaxPackets", UintegerValue(1));
+    echoClientNew.SetAttribute("Interval", TimeValue(Seconds(1.0)));
+    echoClientNew.SetAttribute("PacketSize", UintegerValue(1024));
+
+    ApplicationContainer clientAppsNew = echoClientNew.Install(p2pNodes.Get(0));
+    clientAppsNew.Start(Seconds(2.0));
+    clientAppsNew.Stop(Seconds(10.0));
+
+
+
     Ipv4GlobalRoutingHelper::PopulateRoutingTables();
 
-    pointToPoint.EnablePcapAll("second");
-    csma.EnablePcap("second", csmaDevices.Get(1), true);
+    pointToPoint.EnablePcap("second", p2pNodes.Get(0)->GetId(), 0);
+    csma.EnablePcap("second", csmaNodes.Get(nCsma)->GetId(), 0, false); 
+    csma.EnablePcap("second", csmaNodes.Get(nCsma-1)->GetId(), 0, false);
+    csma.EnablePcap("second", csmaDevices.Get(nCsma), true);
+    csma.EnablePcap("second", csmaDevices.Get(nCsma - 1), false);
 
     Simulator::Run();
     Simulator::Destroy();
