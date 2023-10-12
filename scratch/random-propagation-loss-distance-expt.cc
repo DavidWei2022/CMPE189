@@ -107,7 +107,7 @@ int main (int argc, char *argv[])
   //Set the random seed value
   RngSeedManager::SetSeed (3);  
   
-  GnuplotCollection gnuplots ("rxPower-pdf-random.pdf");
+  GnuplotCollection gnuplots ("LogNormalShadowModel.pdf");
 
   {
 	Gnuplot plot;
@@ -119,7 +119,7 @@ int main (int argc, char *argv[])
 	Ptr<RandomPropagationLossModel> randomProp = CreateObject<RandomPropagationLossModel> ();
 	randomProp->SetAttribute("Variable", StringValue ("ns3::UniformRandomVariable[Min=20|Max=100]"));
 	
-        for (double distance = 50.0; distance <= 200.0; distance += 50.0)
+        for (double distance = 200; distance <= 500.0; distance += 50.0)
 	{
 		Gnuplot2dDataset dataset = TestProbabilistic (randomProp, distance);
 		//New dataset for each distance. Adds a line to the plot
@@ -129,7 +129,7 @@ int main (int argc, char *argv[])
 		plot.AddDataset(dataset);
 	}
 	
-    plot.SetTitle ("RandomPropagationLossModel");
+    plot.SetTitle ("LogNormalShadowModel");
     gnuplots.AddPlot (plot);
   }
   
