@@ -1,5 +1,5 @@
-#include "Log-Normal-Shadowing-Model.h"
-#include "propagation-loss-model.h"
+#include "ns3/Log-Normal-Shadowing-Model.h"
+#include "ns3/propagation-loss-model.h"
 #include "ns3/boolean.h"
 #include "ns3/double.h"
 #include "ns3/log.h"
@@ -12,65 +12,6 @@
 namespace ns3
 {
 NS_LOG_COMPONENT_DEFINE("LogNormalShadowingModel");
-
-// // ------------------------------------------------------------------------- //
-
-// NS_OBJECT_ENSURE_REGISTERED(PropagationLossModel);
-
-// TypeId
-// PropagationLossModel::GetTypeId()
-// {
-//     static TypeId tid =
-//         TypeId("ns3::PropagationLossModel").SetParent<Object>().SetGroupName("Propagation");
-//     return tid;
-// }
-
-// PropagationLossModel::PropagationLossModel()
-//     : m_next(nullptr)
-// {
-// }
-
-// PropagationLossModel::~PropagationLossModel()
-// {
-// }
-
-// void
-// PropagationLossModel::SetNext(Ptr<PropagationLossModel> next)
-// {
-//     m_next = next;
-// }
-
-// Ptr<PropagationLossModel>
-// PropagationLossModel::GetNext()
-// {
-//     return m_next;
-// }
-
-// double
-// PropagationLossModel::CalcRxPower(double txPowerDbm,
-//                                   Ptr<MobilityModel> a,
-//                                   Ptr<MobilityModel> b) const
-// {
-//     double self = DoCalcRxPower(txPowerDbm, a, b);
-//     if (m_next)
-//     {
-//         self = m_next->CalcRxPower(self, a, b);
-//     }
-//     return self;
-// }
-
-// int64_t
-// PropagationLossModel::AssignStreams(int64_t stream)
-// {
-//     int64_t currentStream = stream;
-//     currentStream += DoAssignStreams(stream);
-//     if (m_next)
-//     {
-//         currentStream += m_next->AssignStreams(currentStream);
-//     }
-//     return (currentStream - stream);
-// }
-
 
 //------------------------------------------------------------------------------------------------------------------------------------//
 NS_OBJECT_ENSURE_REGISTERED(LogNormalShadowingModel);
@@ -165,7 +106,7 @@ LogNormalShadowingModel::DoCalcRxPower(double txPowerDbm,
     NS_LOG_DEBUG("distance=" << distance << "m, reference-attenuation=" << -m_referenceLoss
                              << "dB, "
                              << "attenuation coefficient=" << rxc << "db");
-    return txPowerDbm + rxc;
+    return txPowerDbm + rxc+GaussianDistributedRandomVariable;
 }
 
 int64_t
