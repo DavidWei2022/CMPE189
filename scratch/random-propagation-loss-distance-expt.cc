@@ -18,7 +18,7 @@
  * Author: Mahima Agumbe Suresh <mahima.as@tamu.edu>
  */
 
-#include "ns3/propagation-loss-model.h"
+#include "ns3/Log-Normal-Shadowing-Model.h"
 #include "ns3/propagation-cache.h"
 #include "ns3/constant-position-mobility-model.h"
 #include "ns3/config.h"
@@ -57,7 +57,7 @@ static double dround (double number, double precision)
 }
 
 static Gnuplot2dDataset
-TestProbabilistic (Ptr<PropagationLossModel> model, double distance, unsigned int samples = 1000)
+TestProbabilistic (Ptr<PropagationLossModel> model, double distance, unsigned int samples = 100000)
 {
 	Ptr<ConstantPositionMobilityModel> a = CreateObject<ConstantPositionMobilityModel> ();
 	Ptr<ConstantPositionMobilityModel> b = CreateObject<ConstantPositionMobilityModel> ();
@@ -116,8 +116,8 @@ int main (int argc, char *argv[])
 	plot.AppendExtra ("set key outside");
 
     // Random propagation model with uniform random distribution
-	Ptr<RandomPropagationLossModel> randomProp = CreateObject<RandomPropagationLossModel> ();
-	randomProp->SetAttribute("Variable", StringValue ("ns3::UniformRandomVariable[Min=20|Max=100]"));
+	Ptr<LogNormalShadowingModel> randomProp = CreateObject<LogNormalShadowingModel> ();
+	randomProp->SetAttribute("Variable", StringValue ("ns3::NormalRandomVariable[Mean=0|Variance=2]"));
 	
         for (double distance = 200; distance <= 500.0; distance += 50.0)
 	{
